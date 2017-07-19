@@ -1,8 +1,7 @@
 FROM php:7-apache
 
 # installs missing php dependencies
-RUN pecl install apcu-5.1.6 && \
-    pecl install xdebug-2.4.1 # (dev environment only!)
+RUN pecl install apcu-5.1.6
 
 RUN apt-get update && \
     apt-get install -y zlib1g-dev # dependency for php zip extension
@@ -47,6 +46,18 @@ RUN apt-get update && \
 RUN echo "deb http://httpredir.debian.org/debian/ jessie main contrib non-free" > /etc/apt/sources.list
 RUN apt-get update && \
     apt-get install -y ttf-mscorefonts-installer
+
+# Install New Relic daemon
+RUN apt-get update && \
+    apt-get -yq install wget && \
+    wget -O - https://download.newrelic.com/548C16BF.gpg | apt-key add - && \
+    echo "deb http://apt.newrelic.com/debian/ newrelic non-free" > /etc/apt/sources.list.d/newrelic.list
+
+# Setup environment variables for initializing New Relic
+ENV NR_INSTALL_SILENT 1
+
+RUN apt-get update && \
+    apt-get -yq install newrelic-php5
 
 RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
 

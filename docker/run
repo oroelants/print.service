@@ -8,7 +8,17 @@ else
     echo "home directory for apache user already set"
 fi
 
+echo "Enabling APM metrics" && newrelic-install install;
+echo "setting newrelic app $NR_APP_NAME";
+sed -i "s/newrelic.appname = \"PHP Application\"/newrelic.appname = \"${NR_APP_NAME}\"/" /usr/local/etc/php/conf.d/newrelic.ini;
 cd /var/www/html;
 npm install;
+#cp /var/www/html/node_modules/newrelic/newrelic.js /var/www/html/newrelic.js
+#sed -i "s/app_name: \['My Application'\]/app_name: \['${NR_APP_NAME}'\]/" /var/www/html/newrelic.js
+#sed -i "s/license_key: 'license key here'/license_key: '${NR_INSTALL_KEY}'/" /var/www/html/newrelic.js
 chgrp -R www-data * > /dev/null 2>&1;
+
+a2enmod remoteip;
+a2enconf custom-logs;
+
 exec /usr/sbin/apachectl -DFOREGROUND;

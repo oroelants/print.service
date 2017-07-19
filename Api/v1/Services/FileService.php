@@ -216,12 +216,20 @@ class FileService
      */
     public function populateWordDocument(\SplFileInfo $file, array $data, string $resultFileName): \SplFileInfo
     {
+        $jsonName = $this->generateRandomFileName(".json");
+        $jsonPath = $this->getAbsolutePath($jsonName);
+        $jsonHandle = fopen($jsonPath, "w");
+        fwrite($jsonHandle, json_encode($data));
+        fclose($jsonHandle);
+
         $folderPath = $this->temporaryFilesFolder->getRealPath() . "/";
         $scriptFile = new \SplFileInfo(ROOT_PATH . "Api/v1/Scripts/populateWordDocument.js");
-        $nodeCommand = NODE_PATH . " " . $scriptFile->getRealPath() . " " . $file->getRealPath() . " " . escapeshellarg(json_encode($data)) . " " . $folderPath . $resultFileName;
+        $nodeCommand = NODE_PATH . " " . $scriptFile->getRealPath() . " " . $file->getRealPath() . " " . $jsonPath . " " . $folderPath . $resultFileName;
 
         $process = new Process($nodeCommand);
         $process->run();
+
+        unlink($jsonPath);
 
         if (!$process->isSuccessful()) {
             throw new UnprocessableEntityException($process->getErrorOutput());
@@ -240,11 +248,20 @@ class FileService
      */
     public function populateExcelDocument(\SplFileInfo $file, array $data, string $resultFileName): \SplFileInfo
     {
+        $jsonName = $this->generateRandomFileName(".json");
+        $jsonPath = $this->getAbsolutePath($jsonName);
+        $jsonHandle = fopen($jsonPath, "w");
+        fwrite($jsonHandle, json_encode($data));
+        fclose($jsonHandle);
+
         $folderPath = $this->temporaryFilesFolder->getRealPath() . "/";
         $scriptFile = new \SplFileInfo(ROOT_PATH . "Api/v1/Scripts/populateExcelDocument.js");
-        $nodeCommand = NODE_PATH . " " . $scriptFile->getRealPath() . " " . $file->getRealPath() . " " . escapeshellarg(json_encode($data)) . " " . $folderPath . $resultFileName;
+        $nodeCommand = NODE_PATH . " " . $scriptFile->getRealPath() . " " . $file->getRealPath() . " " . $jsonPath . " " . $folderPath . $resultFileName;
         $process = new Process($nodeCommand);
         $process->run();
+
+        unlink($jsonPath);
+
         if (!$process->isSuccessful()) {
             throw new UnprocessableEntityException($process->getErrorOutput());
         }

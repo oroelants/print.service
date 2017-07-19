@@ -8,3 +8,4 @@ tmp/*
 !tmp/.empty
 config.php
 print-service.sublime-*
+docker/apache
