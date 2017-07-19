@@ -12,9 +12,15 @@ services:
       - .:/var/www/html:rw
       # others
       - ./docker/ext-apcu.ini:/usr/local/etc/php/conf.d/ext-acpu.ini:ro
-      - ./docker/ext-xdebug.ini:/usr/local/etc/php/conf.d/ext-xdebug.ini:ro
       - ./docker/run:/etc/services.d/apache/run:rw
       # ignored folders
       - /var/www/html/bin
       - /var/www/html/docker
+      # logs
+      - ./docker/apache/logs:/var/log/apache2:rw
+      - ./docker/remoteip.conf:/etc/apache2/mods-available/remoteip.conf:ro
+      - ./docker/custom-logs.conf:/etc/apache2/conf-available/custom-logs.conf:ro
+    environment:
+      NR_INSTALL_KEY: TOCHANGE
+      NR_APP_NAME: "PrintService-Preprod"
     restart: unless-stopped

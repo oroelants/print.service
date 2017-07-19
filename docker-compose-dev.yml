@@ -3,7 +3,9 @@ version: '2'
 
 services:
   php-apache:
-    build: ./docker
+    build:
+      context: ./docker
+      dockerfile: Dockerfile-dev
     container_name: printservice_api_dev
     ports:
       - 80:80
@@ -17,4 +19,11 @@ services:
       # ignored folders
       - /var/www/html/bin
       - /var/www/html/docker
+      # logs
+      - ./docker/apache/logs:/var/log/apache2:rw
+      - ./docker/remoteip.conf:/etc/apache2/mods-available/remoteip.conf:ro
+      - ./docker/custom-logs.conf:/etc/apache2/conf-available/custom-logs.conf:ro
+    environment:
+      NR_INSTALL_KEY: TOCHANGE
+      NR_APP_NAME: "PrintService-Dev"
     restart: unless-stopped
