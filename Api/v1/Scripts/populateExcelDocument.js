@@ -23,12 +23,18 @@ if (typeof arguments[0] !== 'undefined') {
 }
 
 if (typeof arguments[1] !== 'undefined') {
+    jsonDataRealPath = arguments[1];
+
+    if (!fs.existsSync(jsonDataRealPath)) {
+        throw new Error('Unable to fin the JSON file at the location "' + jsonDataRealPath + '".')
+    }
+
     try {
-        jsonData = JSON.parse(arguments[1]);
+        content = fs.readFileSync(jsonDataRealPath);
+        jsonData = JSON.parse(content);
     } catch (e) {
         throw new Error ('Please provide a valid JSON.')
     }
-
 } else {
    // throw new Error('Please provide the JSON data real path.')
     throw new Error('Please provide the JSON data.')
@@ -51,6 +57,4 @@ fs.readFile(templateRealPath, function(err, data) {
 
     buffer = document.generate();
     fs.writeFile(populatedTemplateRealPath, buffer, 'binary');
-    //fs.writeFileSync(populatedTemplateRealPath, buffer);
-
 });

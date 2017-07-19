@@ -113,11 +113,15 @@ class MailTemplate extends AbstractTemplateToPopulate
         $separator = '--'.self::MULTIPART_BOUNDARY;
 
         fwrite($handle, <<<EOL
-$separator
-Content-Disposition: name="subject"
-Content-Type: text/plain
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="XZY"
+Subject: $subject
 
-$subject
+$separator
+Content-Disposition: name="preamble"
+Content-Type: text/plain;charset=UTF-8
+
+$contentText
 
 EOL
         );
@@ -126,7 +130,7 @@ EOL
             fwrite($handle, <<<EOL
 $separator
 Content-Disposition: name="contentText"
-Content-Type: text/plain
+Content-Type: text/plain;charset=UTF-8
 
 $contentText
 
@@ -138,7 +142,7 @@ EOL
             fwrite($handle, <<<EOL
 $separator
 Content-Disposition: name="contentHTML"
-Content-Type: text/html
+Content-Type: text/html;charset=UTF-8
 
 $contentHTML
 

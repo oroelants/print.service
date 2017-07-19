@@ -1,8 +1,9 @@
 // initialize Angular parser
 var expressions= require('angular-expressions')
-var angularParser= function(tag){
-    expr=expressions.compile(tag);
-    return {get:expr};
+var angularParser= function(tag) {
+    return {
+        get: tag == '.' ? function(s){ return s;} : expressions.compile(tag)
+    };
 }
 
 // loads libraries
@@ -35,12 +36,7 @@ if (typeof arguments[0] !== 'undefined') {
 }
 
 if (typeof arguments[1] !== 'undefined') {
-    try {
-        jsonData = JSON.parse(arguments[1]);
-    } catch (e) {
-        throw new Error ('Please provide a valid JSON.')
-    }
-    /*jsonDataRealPath = arguments[1];
+    jsonDataRealPath = arguments[1];
 
     if (!fs.existsSync(jsonDataRealPath)) {
         throw new Error('Unable to fin the JSON file at the location "' + jsonDataRealPath + '".')
@@ -51,7 +47,7 @@ if (typeof arguments[1] !== 'undefined') {
         jsonData = JSON.parse(content);
     } catch (e) {
         throw new Error ('Please provide a valid JSON.')
-    }*/
+    }
 
 } else {
    // throw new Error('Please provide the JSON data real path.')
@@ -82,7 +78,11 @@ fs.readFile(templateRealPath, function(err, data) {
     document.attachModule(new ImageModule(imageOptions));
     document.attachModule(new LinkModule());
     document.attachModule(new ChartModule());
-    document.setOptions({parser:angularParser});
+    document.setOptions({
+        parser:angularParser,
+        nullGetter: function() {
+            return "";
+    }});
     document.load(data);
     document.setData(jsonData);
     document.render();
