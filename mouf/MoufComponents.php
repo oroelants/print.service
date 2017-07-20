@@ -595,6 +595,13 @@ $moufManager->addComponentInstances(array (
       ),
     ),
   ),
+  '__anonymous__2e32_656328_1500565404079' => 
+  array (
+    'class' => 'Api\\v1\\Services\\Extensions\\DateParserFilter',
+    'external' => false,
+    'weak' => true,
+    'anonymous' => true,
+  ),
   '__anonymous__2e32_766222_1473858447177' => 
   array (
     'class' => 'Mouf\\Mvc\\Splash\\Routers\\Router',
@@ -1369,12 +1376,16 @@ return rtrim(sys_get_temp_dir(), \'/\\\\\').\'/mouftwigtemplatemain_\'.$posixGet
     ),
     'setterBinds' => 
     array (
+      'setCache' => 'twigCacheFileSystem',
       'setExtensions' => 
       array (
         0 => 'moufTwigExtension',
         1 => 'twigDebugExtension',
+        2 => '__anonymous__2e32_656328_1500565404079',
       ),
-      'setCache' => 'twigCacheFileSystem',
+    ),
+    'setterProperties' => 
+    array (
     ),
   ),
   'twigLoaderFileSystem' => 
