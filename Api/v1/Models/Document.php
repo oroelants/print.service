@@ -132,14 +132,15 @@ class Document
                         $formattedData[$key] = $currentData["url"];
                         break;
                     default:
-                        throw new BadRequestException();
+                        // if type is an other value, it should be considered as normal property
+                        $formattedData[$key] = $currentData;
+                        break;
                 }
                 continue;
             }
 
             $formattedData[$key] = $this->formatDataForHtml($currentData);
         }
-
         return $formattedData;
     }
 
@@ -185,7 +186,9 @@ class Document
                         $formattedData[$key] = $file->getRealPath();
                         break;
                     default:
-                        throw new BadRequestException();
+                        // if type is an other value, it should be considered as normal property
+                        $formattedData[$key] = $currentData;
+                        break;
                 }
                 continue;
             }
@@ -233,7 +236,9 @@ class Document
                         $formattedData[$key] = $file->getRealPath();
                         break;
                     default:
-                        throw new BadRequestException();
+                        // if type is an other value, it should be considered as normal property
+                        $formattedData[$key] = $currentData;
+                        break;
                 }
                 continue;
             }
