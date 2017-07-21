@@ -12,8 +12,7 @@ RUN docker-php-ext-install zip
 RUN a2enmod rewrite
 
 # s6-overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v1.11.0.1/s6-overlay-amd64.tar.gz /tmp/
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
+RUN curl -sL https://github.com/just-containers/s6-overlay/releases/download/v1.11.0.1/s6-overlay-amd64.tar.gz | tar xzf - -C /
 
 # installs nodejs and npm
 RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
@@ -23,8 +22,8 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
     ln -s /usr/bin/npm /usr/local/bin/npm
 
 # installs wkhtmltopdf
-RUN apt-get update && \
-    apt-get install -y wkhtmltopdf && \
+RUN curl -sL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz | tar xf - -J -C /tmp/ && \
+    cp /tmp/wkhtmltox/bin/wkhtmltopdf /usr/bin/wkhtmltopdf && \
     ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
 
 # installs xvfb
